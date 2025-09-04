@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Generate Icons (Orange O)</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial; padding: 16px; }
+      .row { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; }
+      canvas { border: 1px solid #eee; background: #fff; }
+      button { padding: 8px 12px; border-radius: 8px; border: 1px solid #ddd; cursor: pointer; }
+      .muted { color: #666; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <h1>Generate PNG icons</h1>
+    <p class="muted">Open this file in Chrome, then click to download PNGs. Move the files into this <code>icons/</code> folder.</p>
+    <div id="targets" class="row"></div>
+    <script>
+      const sizes = [16, 48, 128];
+      const ORANGE = '#e4643d';
+      function draw(size) {
+        const c = document.createElement('canvas');
+        c.width = size; c.height = size;
+        const ctx = c.getContext('2d');
+        // Orange background
+        ctx.fillStyle = ORANGE;
+        ctx.fillRect(0, 0, size, size);
+        const cx = size / 2, cy = size / 2;
+        const rOuter = size * 0.42;
+        const rInner = size * 0.26;
+        // White disk
+        ctx.fillStyle = '#fff';
+        ctx.beginPath(); ctx.arc(cx, cy, rOuter, 0, Math.PI*2); ctx.fill();
+        // Orange inner disk (leaves a white ring)
+        ctx.fillStyle = ORANGE;
+        ctx.beginPath(); ctx.arc(cx, cy, rInner, 0, Math.PI*2); ctx.fill();
+        return c;
+      }
+      function download(canvas, name) {
+        const a = document.createElement('a');
+        a.href = canvas.toDataURL('image/png');
+        a.download = name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+      const host = document.getElementById('targets');
+      sizes.forEach((s) => {
+        const c = draw(s);
+        const btn = document.createElement('button');
+        btn.textContent = `Download icon${s}.png`;
+        btn.addEventListener('click', () => download(c, `icon${s}.png`));
+        const wrap = document.createElement('div');
+        wrap.appendChild(c);
+        wrap.appendChild(document.createElement('br'));
+        wrap.appendChild(btn);
+        wrap.style.display = 'inline-flex';
+        wrap.style.flexDirection = 'column';
+        wrap.style.alignItems = 'center';
+        wrap.style.gap = '6px';
+        wrap.style.marginRight = '12px';
+        host.appendChild(wrap);
+      });
+    </script>
+  </body>
+  </html>
+

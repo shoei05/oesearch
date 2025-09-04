@@ -5,7 +5,12 @@
   "description": "Append an SR/MA + GRADE English prompt to your query and search OpenEvidence.",
   "action": {
     "default_title": "OpenEvidence Search Helper",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
   "permissions": [
     "storage",
@@ -14,10 +19,11 @@
   ],
   "host_permissions": [
     "https://openevidence.com/*",
-    "https://www.openevidence.com/*",
-    "https://*.openevidence.com/*"
+    "https://www.openevidence.com/*"
   ],
-  "omnibox": { "keyword": "oe" },
+  "omnibox": {
+    "keyword": "oe"
+  },
   "background": {
     "service_worker": "background.js"
   },
@@ -26,11 +32,17 @@
     {
       "matches": [
         "https://openevidence.com/*",
-        "https://www.openevidence.com/*",
-        "https://*.openevidence.com/*"
+        "https://www.openevidence.com/*"
       ],
-      "js": ["content-oe.js"],
+      "js": [
+        "content-oe.js"
+      ],
       "run_at": "document_idle"
     }
-  ]
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }

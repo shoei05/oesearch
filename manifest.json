@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "OpenEvidence Search Helper",
+  "version": "1.0.0",
+  "description": "Append an SR/MA + GRADE English prompt to your query and search OpenEvidence.",
+  "action": {
+    "default_title": "OpenEvidence Search Helper",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "storage",
+    "contextMenus",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://openevidence.com/*",
+    "https://www.openevidence.com/*",
+    "https://*.openevidence.com/*"
+  ],
+  "omnibox": { "keyword": "oe" },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://openevidence.com/*",
+        "https://www.openevidence.com/*",
+        "https://*.openevidence.com/*"
+      ],
+      "js": ["content-oe.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

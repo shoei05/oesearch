@@ -38,16 +38,18 @@ function requestSearch(query) {
       const canvas = document.createElement('canvas');
       canvas.width = s; canvas.height = s;
       const ctx = canvas.getContext('2d');
+      // Orange background
       ctx.fillStyle = '#e4643d';
       ctx.fillRect(0, 0, s, s);
       const cx = s / 2, cy = s / 2;
       const rOuter = s * 0.42;
       const rInner = s * 0.26;
+      // White disk for outer
       ctx.fillStyle = '#fff';
       ctx.beginPath(); ctx.arc(cx, cy, rOuter, 0, Math.PI*2); ctx.fill();
-      ctx.globalCompositeOperation = 'destination-out';
+      // Orange inner disk to leave a white ring only
+      ctx.fillStyle = '#e4643d';
       ctx.beginPath(); ctx.arc(cx, cy, rInner, 0, Math.PI*2); ctx.fill();
-      ctx.globalCompositeOperation = 'source-over';
       imageData[s] = ctx.getImageData(0, 0, s, s);
     }
     chrome.action.setIcon({ imageData }, () => void chrome.runtime.lastError);

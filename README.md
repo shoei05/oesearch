@@ -26,7 +26,6 @@ Provide a comprehensive explanation drawing on systematic reviews and meta-analy
 - ポップアップ: テキストボックスに入力して Search。歯車リンクからオプションを開いてカスタマイズ可能。
 
 ## 実装メモと仕様変更
-- Google 検索サポートは削除しました（site: 検索は非推奨との要望に対応）。
 - `background.js`: すべて OpenEvidence 固定。タブを開き、`OE_APPLY_AND_SUBMIT` メッセージでクエリ投入＋送信を指示します。
 - `content-oe.js`: 受信したクエリをテキストエリアへ設定し、指定 XPath のボタン（または近傍の submit ボタン）を自動クリックします。SPA 遅延に備えてリトライあり。
 - `popup.html` / `popup.js`: シンプルな入力ボックスのみ。IME 変換中の Enter は無視。検索はバックグラウンドに委譲します。

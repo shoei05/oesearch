@@ -1,6 +1,6 @@
 # OpenEvidence Search Helper (MV3)
 
-OpenEvidence（https://www.openevidence.com/）向けに、検索語の末尾へ英語プロンプトを自動付与して検索する拡張です。
+OpenEvidence（https://www.openevidence.com/ ）向けに、検索語の末尾へ英語プロンプトを自動付与して検索する拡張です。
 
 既定の付与文:
 

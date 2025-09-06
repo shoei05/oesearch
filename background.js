@@ -83,9 +83,13 @@ chrome.omnibox.onInputEntered.addListener((text, disposition) => {
 chrome.omnibox.onInputChanged.addListener((text, suggest) => {
   // 入力中サジェスト（視認性向上）
   const { withPrompt: preview } = buildQueries(text, DEFAULT_PROMPT);
+  // Chrome requires suggestion.content to be a non-empty string.
+  // When the user has typed nothing after the keyword, fall back to a
+  // non-empty preview string to avoid runtime errors.
+  const safeContent = (text && text.length > 0) ? text : preview;
   suggest([
     {
-      content: text,
+      content: safeContent,
       description: `Search with SR/MA + GRADE suffix: <match>${preview}</match>`
     }
   ]);

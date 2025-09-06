@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "OpenEvidence Search Helper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Append an SR/MA + GRADE English prompt to your query and search OpenEvidence.",
   "action": {
     "default_title": "OpenEvidence Search Helper",

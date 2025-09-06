@@ -1,6 +1,20 @@
 (() => {
   let lastApplied = "";
   let lastSubmittedAt = 0;
+  let imeComposing = false;
+  let imeLastEndedAt = 0;
+  const IME_GUARD_WINDOW_MS = 120; // treat Enter just after composition as IME-confirm
+  let imeGuardEnabled = true;
+
+  function getSettings() {
+    return new Promise((resolve) => {
+      try {
+        chrome.storage?.sync?.get?.({ imeGuardEnabled: true }, (items) => resolve(items || { imeGuardEnabled: true }));
+      } catch {
+        resolve({ imeGuardEnabled: true });
+      }
+    });
+  }
   // Try to find a search field on OpenEvidence and set text
   function isEditable(el) {
     if (!el) return false;
@@ -43,6 +57,55 @@
     }
     const el = root.querySelector('input,textarea,[contenteditable="true"]');
     return isEditable(el) ? el : null;
+  }
+
+  // Install IME-aware Enter handling so that confirming prediction with Enter
+  // does not trigger page-level submit handlers.
+  function installImeGuard() {
+    if (window.__oeImeGuardInstalled) return;
+    window.__oeImeGuardInstalled = true;
+
+    const onCompStart = (e) => {
+      if (!isEditable(e.target)) return;
+      imeComposing = true;
+    };
+    const onCompEnd = (e) => {
+      if (!isEditable(e.target)) return;
+      imeComposing = false;
+      imeLastEndedAt = Date.now();
+    };
+    const shouldBlock = (e) => {
+      if (!imeGuardEnabled) return false;
+      if (e.key !== 'Enter') return false;
+      if (!isEditable(e.target)) return false;
+      if (!e.isTrusted) return false; // allow synthetic events from this extension
+      const now = Date.now();
+      const likelyIme = e.isComposing || e.keyCode === 229 || imeComposing || (now - imeLastEndedAt) <= IME_GUARD_WINDOW_MS;
+      return !!likelyIme;
+    };
+    const onKeyDown = (e) => {
+      if (!shouldBlock(e)) return;
+      // Block page handlers that submit on Enter during composition.
+      // Keep default behavior so IME can commit the candidate text.
+      if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+      else e.stopPropagation();
+      // In single-line inputs, Enter may submit by default; prevent that.
+      const tag = e.target.tagName?.toLowerCase?.();
+      if (tag === 'input') e.preventDefault();
+    };
+    const onKeyUp = (e) => {
+      if (!shouldBlock(e)) return;
+      if (typeof e.stopImmediatePropagation === 'function') e.stopImmediatePropagation();
+      else e.stopPropagation();
+    };
+
+    // Capture phase to preempt site handlers
+    document.addEventListener('compositionstart', onCompStart, true);
+    document.addEventListener('compositionend', onCompEnd, true);
+    document.addEventListener('keydown', onKeyDown, true);
+    document.addEventListener('keyup', onKeyUp, true);
+    // Some sites still rely on keypress
+    document.addEventListener('keypress', onKeyDown, true);
   }
 
   function setText(el, text) {
@@ -115,6 +178,8 @@
   }
 
   chrome.runtime.onMessage.addListener((msg, _sender, _resp) => {
+    // Ensure IME guard is active when enabled
+    if (imeGuardEnabled) { try { installImeGuard(); } catch {} }
     if (msg?.type === 'OE_APPLY_QUERY' && typeof msg.query === 'string') {
       applyQuery(msg.query, false);
     }
@@ -127,6 +192,22 @@
   try {
     const url = new URL(location.href);
     const p = url.searchParams.get('oe_q');
-    if (p) applyQuery(p, true);
+    getSettings().then(({ imeGuardEnabled: enabled }) => {
+      imeGuardEnabled = !!enabled;
+      if (imeGuardEnabled) { try { installImeGuard(); } catch {} }
+      if (p) {
+        applyQuery(p, true);
+      }
+    });
+  } catch {}
+  // Reflect live option changes without reload
+  try {
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area !== 'sync' || !changes.imeGuardEnabled) return;
+      imeGuardEnabled = !!changes.imeGuardEnabled.newValue;
+      if (imeGuardEnabled) { try { installImeGuard(); } catch {} }
+      // Disabling after install: we cannot unhook capture listeners safely for third-party pages;
+      // but we keep guard passive by leaving it installed and only relying on 'imeGuardEnabled' in shouldBlock.
+    });
   } catch {}
 })();

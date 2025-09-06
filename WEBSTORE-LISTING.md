@@ -20,6 +20,7 @@ OpenEvidence search via omnibox/menu/popup; appends an SR/MA + GRADE prompt.
   - Popup: quick search box; customize the appended prompt in Options.
   - IME‑safe: ignores Enter during Japanese composition in the popup.
   - Auto‑fill + submit with resilient selectors on openevidence.com.
+  - Always opens in a new tab (no `tabs` permission required).
 - Notes:
   - Unofficial; not affiliated with OpenEvidence.
   - No personal data is collected or transmitted.
@@ -36,6 +37,7 @@ OpenEvidence search via omnibox/menu/popup; appends an SR/MA + GRADE prompt.
   - ポップアップ: 簡易検索ボックス。付与英文はオプションで編集可能。
   - 日本語入力対応: ポップアップでIME変換中のEnterは送信しません。
   - openevidence.com上の検索欄へ自動入力＋送信（堅牢なセレクタ）。
+  - いつも新規タブで開きます（`tabs` 権限は不要）。
 - 注意:
   - 非公式拡張であり、OpenEvidenceとは提携していません。
   - 個人データの収集・送信は行いません。
@@ -46,6 +48,7 @@ OpenEvidence search via omnibox/menu/popup; appends an SR/MA + GRADE prompt.
 - Permissions rationale:
   - storage: saves your custom appended prompt.
   - contextMenus: enables right‑click “Search OpenEvidence…” action.
+  - omnibox: enables the `oe` keyword entry.
 - Host permissions rationale:
   - openevidence.com / www.openevidence.com: required to inject only the minimal content script that enters your query and clicks the search button.
 - Remote code: not used. All code is packaged.

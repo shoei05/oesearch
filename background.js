@@ -23,49 +23,18 @@ function getSettings() {
   });
 }
 
-async function openSearch(url, disposition) {
-  // Omnibox disposition に応じて開き方を変える
-  try {
-    if (disposition === "currentTab") {
-      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (tab?.id) {
-        await chrome.tabs.update(tab.id, { url });
-        return;
-      }
-    } else if (disposition === "newBackgroundTab") {
-      await chrome.tabs.create({ url, active: false });
-      return;
-    }
-  } catch (_) {
-    // fallthrough to default create
-  }
-  await chrome.tabs.create({ url });
-}
-
 async function handleSearch(rawQuery, disposition) {
   const { prompt } = await getSettings();
   const { withPrompt } = buildQueries(rawQuery, prompt);
-
-  // OpenEvidence を開いて、検索欄へ投入 + 送信（ボタン押下）
-  const tab = await chrome.tabs.create({ url: "https://openevidence.com/" });
-  const tabId = tab.id;
-
-  const send = (type) => chrome.tabs.sendMessage(
-    tabId,
-    { type, query: withPrompt },
-    () => void chrome.runtime.lastError
-  );
-
-  const onUpdated = (updatedTabId, info) => {
-    if (updatedTabId === tabId && info.status === "complete") {
-      send("OE_APPLY_AND_SUBMIT");
-      chrome.tabs.onUpdated.removeListener(onUpdated);
-    }
-  };
-  chrome.tabs.onUpdated.addListener(onUpdated);
-  // フォールバック送信（SPA遅延対策）
-  setTimeout(() => send("OE_APPLY_AND_SUBMIT"), 1500);
-  setTimeout(() => send("OE_APPLY_AND_SUBMIT"), 3000);
+  // Always open a NEW TAB with a query parameter that the content script reads.
+  // This avoids needing the "tabs" permission and messaging.
+  const url = `https://openevidence.com/?oe_q=${encodeURIComponent(withPrompt)}`;
+  try {
+    await chrome.tabs.create({ url, active: true });
+  } catch (_) {
+    // As a fallback (very rare), try window.open via an extension page is not available here.
+    // chrome.tabs.create is expected to work without the "tabs" permission for opening a new tab.
+  }
 }
 
 // Popup からの依頼もここで受ける
@@ -77,7 +46,8 @@ chrome.runtime.onMessage.addListener((msg, _sender, _resp) => {
 
 // ===== Omnibox: `oe <query>` =====
 chrome.omnibox.onInputEntered.addListener((text, disposition) => {
-  handleSearch(text, disposition);
+  // Ignore disposition; always open a new foreground tab to avoid the "tabs" permission.
+  handleSearch(text);
 });
 
 chrome.omnibox.onInputChanged.addListener((text, suggest) => {

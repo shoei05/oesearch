@@ -13,6 +13,7 @@ rm -f "$ZIP_PATH"
 
 zip -r -X "$ZIP_PATH" . \
   -x '*.git*' \
+  -x '.*' \
   -x '*node_modules*' \
   -x '*dist*' \
   -x '*build*' \

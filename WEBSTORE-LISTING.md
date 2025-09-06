@@ -46,7 +46,6 @@ OpenEvidence search via omnibox/menu/popup; appends an SR/MA + GRADE prompt.
 - Permissions rationale:
   - storage: saves your custom appended prompt.
   - contextMenus: enables right‑click “Search OpenEvidence…” action.
-  - tabs: opens openevidence.com and automates the search.
 - Host permissions rationale:
   - openevidence.com / www.openevidence.com: required to inject only the minimal content script that enters your query and clicks the search button.
 - Remote code: not used. All code is packaged.

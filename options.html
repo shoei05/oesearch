@@ -23,6 +23,15 @@
       <textarea id="prompt"></textarea>
     </div>
 
+    <div class="card">
+      <h3>Behavior</h3>
+      <label style="display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" id="ime_guard" />
+        <span>Prevent Enter-submission while Japanese IME is composing</span>
+      </label>
+      <div class="muted">Recommended ON. Avoids accidental submits when confirming candidates with Enter.</div>
+    </div>
+
     <div class="row" style="margin-top: 16px;">
       <button id="save">Save</button>
       <div id="status" class="muted" aria-live="polite"></div>

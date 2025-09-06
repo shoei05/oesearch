@@ -16,7 +16,11 @@ This guide helps you install and test the pre‑release build from GitHub Releas
   - Click the toolbar icon → type any query (JP/EN) → “Search”.
   - Confirm: new tab opens `openevidence.com`, the query plus the English SR/MA + GRADE prompt is auto‑filled once, and the search button auto‑clicks.
 - IME behavior (Japanese):
-  - While composing (かな漢字変換中), hitting Enter should NOT submit. After composition ends, Enter submits.
+  - While composing (かな漢字変換中), hitting Enter should NOT submit.
+  - After composition ends, Enter submits per site behavior.
+  - Shift+Enter for newline remains available (site-dependent).
+  - Repeated conversions/commits should never auto-submit during composition.
+  - This can be toggled in Options: “Prevent Enter-submission while Japanese IME is composing”. Default: ON.
 - Context menu:
   - Select text on any page → right‑click → “Search OpenEvidence…”.
   - Confirm the same auto‑fill + submit behavior.
@@ -56,7 +60,11 @@ GitHub Releases からプレリリースの ZIP を入れて動作確認する�
   - ツールバーのアイコン → 検索語（日本語/英語）を入力 → “Search”。
   - 期待: 新規タブで `openevidence.com` が開き、検索欄に「検索語 — 英文プロンプト」が1回だけ自動入力され、ボタンが自動クリックされる。
 - 日本語IME:
-  - かな漢字変換中の Enter は送信されない。確定後の Enter で送信。
+  - かな漢字変換中の Enter は送信されない。
+  - 変換確定後の Enter はサイト仕様どおりに送信される。
+  - 改行は `Shift+Enter`（サイト依存）。
+  - 連続して確定しても、確定 Enter で送信されないこと。
+  - オプションで ON/OFF 可能（初期値は ON）。
 - 右クリック検索:
   - 文字列を選択 → 右クリック → “Search OpenEvidence…”。
 - Omnibox:

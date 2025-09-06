@@ -6,7 +6,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-ZIP_PATH="../oesearch-mv3.zip"
+ZIP_PATH="./oesearch-mv3.zip"
 echo "[pack] Writing $ZIP_PATH"
 
 rm -f "$ZIP_PATH"
@@ -16,10 +16,11 @@ zip -r -X "$ZIP_PATH" . \
   -x '*node_modules*' \
   -x '*dist*' \
   -x '*build*' \
+  -x 'repo_oesearch/*' \
+  -x 'oesearch-mv3.zip' \
   -x '*icons/generate.html' \
   -x '*icons/README.md' \
   -x '*scripts/*' \
   -x '*.DS_Store'
 
 echo "[pack] Done: $ZIP_PATH"
-

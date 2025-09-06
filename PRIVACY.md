@@ -1,6 +1,6 @@
 # Privacy Policy / プライバシーポリシー
 
-Last updated: 2025-09-04
+Last updated: 2025-09-06
 
 This Chrome extension ("the Extension") helps you search on openevidence.com by appending an English prompt and automating text entry and the submit button. It is an unofficial project and not affiliated with OpenEvidence.
 
@@ -16,12 +16,10 @@ This Chrome extension ("the Extension") helps you search on openevidence.com by 
 ## Permissions and Purpose / 権限と目的
 - "storage": Saves your custom appended prompt in Chrome Sync (so it persists across devices if sync is on).
 - "contextMenus": Adds a right‑click menu item ("Search OpenEvidence…") to run a search using selected text.
-- "tabs": Opens a new tab to openevidence.com and automates filling/submitting the search form.
 - Host permissions (openevidence.com and www.openevidence.com): Required to run a content script that inputs your query into the site’s search box and clicks the search button.
 
 - 「storage」: 付与英文の設定をChromeの同期ストレージに保存するため。
 - 「contextMenus」: 選択文字列から右クリックで検索を実行するメニューを追加するため。
-- 「tabs」: openevidence.com の新規タブを開き、検索欄への入力と送信ボタンのクリックを自動化するため。
 - ホスト権限（openevidence.com および www.openevidence.com）: サイトの検索欄にクエリを入力し、ボタンを押すためのコンテンツスクリプトを実行するために必要です。
 
 ## Remote Code / リモートコード
